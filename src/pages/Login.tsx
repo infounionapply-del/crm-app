@@ -29,7 +29,7 @@ export default function Login() {
       if (String(data.password_hash).trim() !== String(password).trim()) {
         throw new Error('รหัสผ่านไม่ถูกต้อง (Invalid password)');
       }
-      
+
       // Navigate to dashboard on success
       sessionStorage.setItem('crm_session', JSON.stringify(data));
       window.location.href = '/';
@@ -43,7 +43,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#8b5cf6] to-[#d946ef] flex items-center justify-center p-4 sm:p-8 font-headline">
       <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px]">
-        
+
         {/* Left Pane - Branding */}
         <div className="hidden md:flex flex-col items-center justify-center w-1/2 p-12 bg-gradient-to-br from-[#8b5cf6] to-[#d946ef] text-white relative">
           <div className="w-24 h-24 border-2 border-white/30 rounded-full flex items-center justify-center mb-6 shadow-inner bg-white/5 backdrop-blur-sm">
@@ -51,10 +51,10 @@ export default function Login() {
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-3 drop-shadow-md">CRM System</h1>
           <p className="text-center text-white/90 text-sm leading-relaxed max-w-xs drop-shadow-sm font-light">
-            ระบบจัดการข้อมูลลูกค้า<br/>และทรัพยากรบุคคลออนไลน์ที่ทันสมัยที่สุด
+            ระบบจัดการข้อมูลลูกค้า
           </p>
           <div className="mt-8 border-t border-white/20 pt-4 w-32 text-center">
-            <span className="text-xs text-white/70 font-medium tracking-wide">Version 1.0 Pro</span>
+            <span className="text-xs text-white/70 font-medium tracking-wide">Version 1.0</span>
           </div>
         </div>
 
