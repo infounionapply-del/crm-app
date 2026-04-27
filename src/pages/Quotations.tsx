@@ -396,6 +396,15 @@ const Quotations: React.FC = () => {
         setIsSubmitting(false);
       }
   };
+  const tabs = [
+    { id: 'all', label: t('quotation.tab_all'), count: quotations.length },
+    { id: 'drafts', label: t('quotation.tab_inbox'), count: quotations.filter(q => ['New'].includes(q.status)).length },
+    { id: 'approvals', label: t('quotation.tab_approvals'), count: quotations.filter(q => ['Pending Approval'].includes(q.status)).length },
+    { id: 'revisions', label: t('quotation.tab_revisions'), count: quotations.filter(q => ['Rejected', 'Revision Requested'].includes(q.status)).length },
+    { id: 'approved', label: t('quotation.tab_approved'), count: quotations.filter(q => ['Approved'].includes(q.status)).length },
+    { id: 'fulfillment', label: t('quotation.tab_fulfillment'), count: quotations.filter(q => ['Won', 'Order Pending', 'In Process', 'FG', 'Delivery'].includes(q.status)).length },
+    { id: 'canceled', label: t('quotation.tab_canceled'), count: quotations.filter(q => ['Canceled'].includes(q.status)).length }
+  ];
 
   return (
     <div className="space-y-6">
@@ -418,18 +427,10 @@ const Quotations: React.FC = () => {
 
       {/* Filters and Search */}
       <div className="flex flex-col gap-4">
-        {/* Tabs */}
-        <div className="flex overflow-x-auto pb-2 scrollbar-hide border-b ghost-border">
+        {/* Tabs - Desktop */}
+        <div className="hidden md:flex overflow-x-auto pb-2 scrollbar-hide border-b ghost-border">
           <div className="flex gap-2 min-w-max px-1">
-            {[
-              { id: 'all', label: t('quotation.tab_all'), count: quotations.length },
-              { id: 'drafts', label: t('quotation.tab_inbox'), count: quotations.filter(q => ['New'].includes(q.status)).length },
-              { id: 'approvals', label: t('quotation.tab_approvals'), count: quotations.filter(q => ['Pending Approval'].includes(q.status)).length },
-              { id: 'revisions', label: t('quotation.tab_revisions'), count: quotations.filter(q => ['Rejected', 'Revision Requested'].includes(q.status)).length },
-              { id: 'approved', label: t('quotation.tab_approved'), count: quotations.filter(q => ['Approved'].includes(q.status)).length },
-              { id: 'fulfillment', label: t('quotation.tab_fulfillment'), count: quotations.filter(q => ['Won', 'Order Pending', 'In Process', 'FG', 'Delivery'].includes(q.status)).length },
-              { id: 'canceled', label: t('quotation.tab_canceled'), count: quotations.filter(q => ['Canceled'].includes(q.status)).length }
-            ].map(tab => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -450,6 +451,24 @@ const Quotations: React.FC = () => {
                 )}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Dropdown - Mobile */}
+        <div className="md:hidden relative w-full">
+          <select 
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full appearance-none bg-surface-container-lowest border ghost-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-on-surface editorial-shadow-sm"
+          >
+            {tabs.map(tab => (
+              <option key={tab.id} value={tab.id}>
+                {tab.label} ({tab.count})
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
 
