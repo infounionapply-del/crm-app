@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-on-secondary-fixed-variant: #3a485b;
+  --color-error-container: #ffdad6;
+  --color-primary-fixed-dim: #c3c0ff;
+  --color-surface-variant: #e0e3e5;
+  --color-on-primary: #ffffff;
+  --color-surface-dim: #d8dadc;
+  --color-secondary: #515f74;
+  --color-surface-container-high: #e6e8ea;
+  --color-surface-container-low: #f2f4f6;
+  --color-surface-bright: #f7f9fb;
+  --color-inverse-primary: #c3c0ff;
+  --color-secondary-fixed: #e8def8;
+  --color-primary: #8b5cf6;
+  --color-on-error: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-primary-container: #f2eeff;
+  --color-on-secondary: #ffffff;
+  --color-on-primary-fixed-variant: #3e3c8f;
+  --color-on-tertiary: #ffffff;
+  --color-on-secondary-container: #57657a;
+  --color-on-secondary-fixed: #0d1c2e;
+  --color-error: #ba1a1a;
+  --color-on-surface: #1c1b1f;
+  --color-primary-container: #d946ef;
+  --color-secondary-container: #e8def8;
+  --color-on-tertiary-fixed: #360f00;
+  --color-background: #f7f9fb;
+  --color-inverse-surface: #2d3133;
+  --color-primary-fixed: #e2dfff;
+  --color-inverse-on-surface: #eff1f3;
+  --color-on-background: #191c1e;
+  --color-surface: #f7f9fb;
+  --color-tertiary-container: #bc4800;
+  --color-secondary-fixed-dim: #b9c7df;
+  --color-outline-variant: #c3c6d7;
+  --color-outline: #79747e;
+  --color-surface-tint: #8b5cf6;
+  --color-surface-container: #eceef0;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-container: "#ffede6";
+  --color-on-surface-variant: #434655;
+  --color-on-primary-fixed: #100563;
+  --color-tertiary-fixed: #ffdbcd;
+  --color-tertiary: #943700;
+  --color-surface-container-highest: #e0e3e5;
+  --color-tertiary-fixed-dim: #ffb596;
+  --color-on-tertiary-fixed-variant: #7d2d00;
+
+  --font-headline: "Inter", "Prompt", sans-serif;
+  --font-body: "Inter", "Prompt", sans-serif;
+  --font-label: "Inter", "Prompt", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-body bg-surface text-on-surface antialiased;
+  }
+}
+
+@layer utilities {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .glass-header, .glass-nav {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+  }
+  .ghost-border {
+    border: 1px solid rgba(195, 198, 215, 0.15);
+  }
+  .editorial-shadow {
+    box-shadow: 0 16px 32px -12px rgba(139, 92, 246, 0.15);
+  }
+  .editorial-gradient {
+    background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+  }
+}
