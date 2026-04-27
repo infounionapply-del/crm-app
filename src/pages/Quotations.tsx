@@ -557,7 +557,7 @@ const Quotations: React.FC = () => {
 
       {/* Quotations List */}
       <div className="bg-surface-container-lowest border ghost-border rounded-2xl overflow-hidden editorial-shadow">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b ghost-border bg-surface-container-low/50">
