@@ -90,7 +90,7 @@ const Targets: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-headline font-bold text-on-surface tracking-tight mb-2">
-            {t('nav.targets')}
+            {t('nav.sales_targets')}
           </h1>
           <p className="text-on-surface-variant flex items-center gap-2">
             <Target size={16} />{t('target.subtitle')}</p>

@@ -476,7 +476,7 @@ const Quotations: React.FC = () => {
           <h2 className="text-sm font-semibold text-on-surface mb-3 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>{t('quotation.new_jobs_pending')}</h2>
           <div className="bg-orange-50/50 border border-orange-200 rounded-xl overflow-hidden editorial-shadow">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-orange-200 bg-orange-100/50">
@@ -518,6 +518,38 @@ const Quotations: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+            
+            {/* Mobile Card View for Pending Jobs */}
+            <div className="md:hidden flex flex-col p-4 gap-4 bg-orange-50">
+              {jobs.filter(j => {
+                if (j.stage === 'Open' || j.stage === 'New') return false;
+                if (['Closed Won', 'Closed Lost', 'Cancel'].includes(j.stage)) return false;
+                const activeQuotations = quotations.filter(q => q.job_id === j.id && !['Canceled', 'Lost'].includes(q.status));
+                return activeQuotations.length === 0;
+              }).map(job => (
+                <div key={job.id} className="bg-white border border-orange-200 rounded-xl p-4 shadow-sm flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <div className="font-medium text-orange-900 flex items-center gap-2">
+                      {job.job_number && <span className="text-orange-700 font-bold text-[10px] bg-orange-100 px-1.5 py-0.5 rounded">{job.job_number}</span>}
+                      <span className="leading-tight">{job.title}</span>
+                    </div>
+                    <div className="text-sm text-orange-800 font-medium">{job.customer}</div>
+                    <div className="text-sm text-orange-700">{job.value}</div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const cust = customers.find(c => c.name === job.customer);
+                      setSelectedCustomer(cust || null);
+                      setSelectedJob(job.id);
+                      setIsCreateModalOpen(true);
+                    }}
+                    className="w-full flex justify-center items-center gap-1.5 px-3 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors hover:bg-orange-700"
+                  >
+                    <Plus size={16} />{t('quotation.create_quote')}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -772,37 +804,37 @@ const Quotations: React.FC = () => {
       {isViewModalOpen && viewingQuote && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-surface-container-lowest rounded-2xl w-full max-w-3xl editorial-shadow overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between p-6 border-b ghost-border flex-shrink-0 bg-surface-container-low/30">
-              <div>
-                <h2 className="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
-                  <FileText size={24} className="text-primary" />
-                  {viewingQuote.quotation_number || 'Pending QT No.'}
+            <div className="flex items-start md:items-center justify-between p-4 md:p-6 border-b ghost-border flex-shrink-0 bg-surface-container-low/30 gap-2">
+              <div className="flex-1 min-w-0 pr-2">
+                <h2 className="text-lg md:text-xl font-headline font-semibold text-on-surface flex items-center gap-2 truncate">
+                  <FileText size={24} className="text-primary hidden sm:block" />
+                  <span className="truncate">{viewingQuote.quotation_number || 'Pending QT No.'}</span>
                 </h2>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border mt-2 ${getStatusColor(viewingQuote.status)}`}>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-medium border mt-2 ${getStatusColor(viewingQuote.status)}`}>
                   {t('status.' + viewingQuote.status.toLowerCase().replace(/ /g, '_')) || viewingQuote.status}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                 {(viewingQuote.status === 'Approved' || viewingQuote.status === 'Won' || viewingQuote.status === 'Order Pending' || viewingQuote.status === 'In Process' || viewingQuote.status === 'FG' || viewingQuote.status === 'Delivery') && (
                   <>
                     {!viewingQuote.quotation_pdf_url ? (
-                      <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'generate')} className="flex items-center gap-1 px-3 py-1.5 text-sm bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white rounded-lg transition-colors hover:from-[#7c3aed] hover:to-[#c026d3] font-bold uppercase" title={t('action.generate_pdf')}>
-                        <FileText size={16} /> GEN PDF
+                      <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'generate')} className="flex items-center gap-1 px-2 md:px-3 py-1.5 text-xs md:text-sm bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white rounded-lg transition-colors hover:from-[#7c3aed] hover:to-[#c026d3] font-bold uppercase" title={t('action.generate_pdf')}>
+                        <FileText size={16} /> <span className="hidden sm:inline">GEN PDF</span>
                       </button>
                     ) : (
                       <>
-                        <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'preview')} className="flex items-center gap-1 px-3 py-1.5 text-sm bg-surface-container hover:bg-surface-container-high text-primary rounded-lg transition-colors" title={t('action.preview_pdf')}>
-                          <FileText size={16} /> {t('action.preview')}
+                        <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'preview')} className="flex items-center gap-1 px-2 md:px-3 py-1.5 text-xs md:text-sm bg-surface-container hover:bg-surface-container-high text-primary rounded-lg transition-colors" title={t('action.preview_pdf')}>
+                          <FileText size={16} /> <span className="hidden sm:inline">{t('action.preview')}</span>
                         </button>
-                        <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'download')} className="flex items-center gap-1 px-3 py-1.5 text-sm bg-surface-container hover:bg-surface-container-high text-primary rounded-lg transition-colors" title={t('action.download_pdf')}>
-                          <Download size={16} /> {t('action.download')}
+                        <button onClick={() => handleDownloadPDF(viewingQuote, 'Quotation', 'download')} className="flex items-center gap-1 px-2 md:px-3 py-1.5 text-xs md:text-sm bg-surface-container hover:bg-surface-container-high text-primary rounded-lg transition-colors" title={t('action.download_pdf')}>
+                          <Download size={16} /> <span className="hidden sm:inline">{t('action.download')}</span>
                         </button>
                       </>
                     )}
                   </>
                 )}
-                <button onClick={() => setIsViewModalOpen(false)} className="p-2 text-outline hover:text-on-surface rounded-lg transition-colors ml-2">
-                  <X size={24} />
+                <button onClick={() => setIsViewModalOpen(false)} className="p-1.5 md:p-2 text-outline hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors ml-1 md:ml-2 bg-surface-container-low" title={t('common.close')}>
+                  <X size={20} className="md:w-6 md:h-6" />
                 </button>
               </div>
             </div>
