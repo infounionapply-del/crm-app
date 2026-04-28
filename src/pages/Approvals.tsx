@@ -6,12 +6,25 @@ import { useAuth } from '../contexts/AuthContext';
 import { Search, Filter, CheckCircle, XCircle, Clock, FileText, MessageSquare } from 'lucide-react';
 
 const Approvals: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { notify } = useNotification();
   const { profile } = useAuth();
   const isManagerOrAdmin = ['Manager', 'Admin', 'Super Admin', 'Administrator'].includes(profile?.role);
   const { approvals, quotations, products, updateApprovalStatus, formatCurrency } = useData();
   const [searchTerm, setSearchTerm] = useState('');
+
+  const parseCustomerName = (customerStr: string) => {
+    if (!customerStr) return '-';
+    if (typeof customerStr === 'string' && customerStr.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(customerStr);
+        return parsed[language] || parsed.th || parsed.en || customerStr;
+      } catch (e) {
+        return customerStr;
+      }
+    }
+    return customerStr;
+  };
   const [activeTab, setActiveTab] = useState('Pending');
   const [viewingApproval, setViewingApproval] = useState<any>(null);
   const [rejectModal, setRejectModal] = useState<{ id: string } | null>(null);
@@ -49,7 +62,7 @@ const Approvals: React.FC = () => {
       await notify.promise(
         updateApprovalStatus(id, 'Approved'),
         {
-          loading: 'Approving...',
+          loading: t('action.approve_processing'),
           success: 'Approved successfully',
           error: 'Failed to approve'
         }
@@ -71,7 +84,7 @@ const Approvals: React.FC = () => {
       await notify.promise(
         updateApprovalStatus(rejectModal.id, 'Rejected', rejectReason),
         {
-          loading: 'Rejecting...',
+          loading: t('action.rejecting'),
           success: 'Rejected successfully',
           error: 'Failed to reject'
         }
@@ -152,14 +165,14 @@ const Approvals: React.FC = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-on-surface">{approval.type} Request</span>
+                    <span className="font-semibold text-on-surface">{approval.type === 'Quotation' ? t('approval.request') : approval.type + ' Request'}</span>
                     <span className="text-sm text-on-surface-variant">• {(() => {
                       const qt = quotations.find((q: any) => q.id === approval.reference);
                       return qt?.quotation_number || approval.reference;
                     })()}</span>
                   </div>
                   <div className="text-sm text-on-surface mb-2">
-                    <span className="font-medium">{approval.requester}</span>{t('approval.requested_for')}<span className="font-medium">{approval.customer}</span>
+                    <span className="font-medium">{approval.requester}</span> {t('approval.requested_for')} <span className="font-medium">{parseCustomerName(approval.customer)}</span>
                   </div>
                   <div className="flex items-center gap-4 text-xs text-on-surface-variant">
                     <span className="flex items-center gap-1"><Clock size={14} /> {approval.date}</span>
@@ -219,7 +232,7 @@ const Approvals: React.FC = () => {
             <div className="flex items-center justify-between p-6 border-b ghost-border flex-shrink-0">
               <h2 className="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
                 {viewingApproval.type === 'Quotation' ? <FileText size={24} className="text-primary" /> : <Clock size={24} className="text-primary" />}
-                Approval Details
+                {t('approval.details')}
               </h2>
               <button onClick={() => setViewingApproval(null)} className="text-outline hover:text-on-surface">
                 <XCircle size={24} />
@@ -228,7 +241,7 @@ const Approvals: React.FC = () => {
             <div className="p-6 space-y-4 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="block text-on-surface-variant mb-1">Reference</span>
+                  <span className="block text-on-surface-variant mb-1">{t('approval.reference')}</span>
                   <span className="font-medium text-on-surface">
                     {(() => {
                       const qt = quotations.find((q: any) => q.id === viewingApproval.reference);
@@ -237,25 +250,25 @@ const Approvals: React.FC = () => {
                   </span>
                 </div>
                 <div>
-                  <span className="block text-on-surface-variant mb-1">Customer</span>
-                  <span className="font-medium text-on-surface">{viewingApproval.customer}</span>
+                  <span className="block text-on-surface-variant mb-1">{t('table.customer')}</span>
+                  <span className="font-medium text-on-surface">{parseCustomerName(viewingApproval.customer)}</span>
                 </div>
                 <div>
-                  <span className="block text-on-surface-variant mb-1">Requester</span>
+                  <span className="block text-on-surface-variant mb-1">{t('approval.requester')}</span>
                   <span className="font-medium text-on-surface">{viewingApproval.requester}</span>
                 </div>
                 <div>
-                  <span className="block text-on-surface-variant mb-1">Date</span>
+                  <span className="block text-on-surface-variant mb-1">{t('approval.date')}</span>
                   <span className="font-medium text-on-surface">{viewingApproval.date}</span>
                 </div>
                 <div>
-                  <span className="block text-on-surface-variant mb-1">Amount / Value</span>
+                  <span className="block text-on-surface-variant mb-1">{t('table.amount_value')}</span>
                   <span className="font-medium text-on-surface">{viewingApproval.amount}</span>
                 </div>
               </div>
               
               <div className="pt-4 border-t ghost-border">
-                <span className="block text-sm font-medium text-on-surface-variant mb-2">Details / Justification</span>
+                <span className="block text-sm font-medium text-on-surface-variant mb-2">{t('approval.details_justification')}</span>
                 <p className="text-sm text-on-surface bg-surface-container-low p-4 rounded-xl border ghost-border whitespace-pre-wrap">
                   {(() => {
                     try {
@@ -266,7 +279,7 @@ const Approvals: React.FC = () => {
                       if (typeof details === 'object' && details !== null) {
                         const qt = quotations.find((q: any) => q.id === details.quotation_id);
                         const qtNo = qt?.quotation_number || details.quotation_id || '-';
-                        return `Quotation No: ${qtNo}\nPO: ${details.po_number || '-'}\nSO: ${details.so_number || '-'}`;
+                        return `${t('approval.quotation_no')} ${qtNo}\nPO: ${details.po_number || '-'}\nSO: ${details.so_number || '-'}`;
                       }
                       return details || '-';
                     } catch (e) {
@@ -282,15 +295,15 @@ const Approvals: React.FC = () => {
                 if (qt && qt.details && qt.details.items) {
                   return (
                     <div className="pt-4 border-t ghost-border">
-                      <span className="block text-sm font-medium text-on-surface-variant mb-2">Quotation Items</span>
+                      <span className="block text-sm font-medium text-on-surface-variant mb-2">{t('approval.items')}</span>
                       <div className="bg-surface-container-low rounded-xl border ghost-border overflow-hidden">
                         <table className="w-full text-left text-sm">
                           <thead className="bg-surface-container/50 border-b ghost-border">
                             <tr>
-                              <th className="px-4 py-2 font-medium text-on-surface-variant">Product/Service</th>
-                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">Qty</th>
-                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">Unit Price</th>
-                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">Total</th>
+                              <th className="px-4 py-2 font-medium text-on-surface-variant">{t('table.product_service')}</th>
+                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">{t('table.qty')}</th>
+                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">{t('table.unit_price')}</th>
+                              <th className="px-4 py-2 font-medium text-on-surface-variant text-right">{t('table.total')}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y ghost-border">
@@ -310,17 +323,17 @@ const Approvals: React.FC = () => {
                           </tbody>
                           <tfoot className="bg-surface-container/30 border-t ghost-border font-medium">
                             <tr>
-                              <td colSpan={3} className="px-4 py-2 text-right text-on-surface-variant">Subtotal</td>
+                              <td colSpan={3} className="px-4 py-2 text-right text-on-surface-variant">{t('table.subtotal')}</td>
                               <td className="px-4 py-2 text-right text-on-surface">{formatCurrency(qt.details.subtotal || 0)}</td>
                             </tr>
                             {(qt.details.discountAmount > 0) && (
                               <tr>
-                                <td colSpan={3} className="px-4 py-2 text-right text-error">Discount</td>
+                                <td colSpan={3} className="px-4 py-2 text-right text-error">{t('table.discount')}</td>
                                 <td className="px-4 py-2 text-right text-error">-{formatCurrency(qt.details.discountAmount || 0)}</td>
                               </tr>
                             )}
                             <tr className="bg-surface-container/50 text-base">
-                              <td colSpan={3} className="px-4 py-3 text-right text-on-surface font-bold">Total</td>
+                              <td colSpan={3} className="px-4 py-3 text-right text-on-surface font-bold">{t('table.total')}</td>
                               <td className="px-4 py-3 text-right text-primary font-bold">{formatCurrency((qt.details.subtotal || 0) - (qt.details.discountAmount || 0))}</td>
                             </tr>
                           </tfoot>
@@ -335,7 +348,7 @@ const Approvals: React.FC = () => {
               <div className="pt-4 flex items-center justify-between flex-shrink-0">
                 <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(viewingApproval.status)}`}>
                   <span className={`w-2 h-2 rounded-full mr-2 ${getStatusDot(viewingApproval.status)}`}></span>
-                  {viewingApproval.status}
+                  {t('status.' + viewingApproval.status.toLowerCase()) || viewingApproval.status}
                 </span>
                 
                 {viewingApproval.status === 'Pending' && isManagerOrAdmin && (
@@ -361,19 +374,19 @@ const Approvals: React.FC = () => {
           <div className="bg-surface-container-lowest rounded-2xl w-full max-w-md editorial-shadow overflow-hidden">
             <div className="p-6 border-b ghost-border">
               <h2 className="text-xl font-headline font-semibold text-on-surface">
-                Reject Approval
+                {t('approval.reject')}
               </h2>
             </div>
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                  Reason for Rejection <span className="text-error">*</span>
+                  {t('approval.reason_for_rejection')}
                 </label>
                 <textarea
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                   className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none text-sm min-h-[100px]"
-                  placeholder="Please enter the reason for rejection..."
+                  placeholder={t('approval.please_enter_reason')}
                 />
               </div>
               <div className="flex justify-end gap-3 pt-2">
@@ -386,7 +399,7 @@ const Approvals: React.FC = () => {
                   disabled={!rejectReason.trim()}
                   className="px-6 py-2 bg-error text-on-error rounded-full font-medium hover:bg-error/90 transition-colors disabled:opacity-50"
                 >
-                  Confirm Reject
+                  {t('action.confirm_reject')}
                 </button>
               </div>
             </div>

@@ -11,7 +11,7 @@ const STATUSES = ['New', 'Pending Approval', 'Approved', 'Won', 'Order Pending',
 // Removed mockPriceList
 
 const Quotations: React.FC = () => {
-  const t = useT();
+  const { t, language } = useLanguage();
   const { notify } = useNotification();
   const { profile } = useAuth();
   const isSupport = profile?.role === 'Support';
@@ -49,6 +49,19 @@ const Quotations: React.FC = () => {
       if (u) return u.name;
     }
     return historyEntry.user || 'System';
+  };
+
+  const parseCustomerName = (customerStr: string) => {
+    if (!customerStr) return '-';
+    if (typeof customerStr === 'string' && customerStr.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(customerStr);
+        return parsed[language] || parsed.th || parsed.en || customerStr;
+      } catch (e) {
+        return customerStr;
+      }
+    }
+    return customerStr;
   };
 
   const filteredCustomers = useMemo(() => {
@@ -293,7 +306,7 @@ const Quotations: React.FC = () => {
       await notify.promise(
         updateQuotation(id, payload),
         {
-          loading: `Updating status to ${newStatus}...`,
+          loading: newStatus === 'Pending Approval' ? t('status.updating_pending') : t('status.processing'),
           success: 'Status updated successfully',
           error: 'Failed to update status'
         }
@@ -553,7 +566,7 @@ const Quotations: React.FC = () => {
                       {job.job_number && <span className="text-orange-700 font-bold text-[10px] bg-orange-100 px-1.5 py-0.5 rounded">{job.job_number}</span>}
                       <span className="leading-tight">{job.title}</span>
                     </div>
-                    <div className="text-sm text-orange-800 font-medium">{job.customer}</div>
+                    <div className="text-sm text-orange-800 font-medium">{parseCustomerName(job.customer)}</div>
                     <div className="text-sm text-orange-700">{job.value}</div>
                   </div>
                   <button
@@ -601,7 +614,7 @@ const Quotations: React.FC = () => {
                         </div>
                       </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-on-surface">{quote.customer}</div>
+                    <div className="text-sm font-medium text-on-surface">{parseCustomerName(quote.customer)}</div>
                     <div className="text-xs text-on-surface-variant mt-0.5 flex items-center gap-1.5">
                       {quote.jobNumber && <span className="font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">{quote.jobNumber}</span>}
                       <span className="truncate">{quote.jobTitle || quote.job}</span>
@@ -903,7 +916,7 @@ const Quotations: React.FC = () => {
               <div className="grid grid-cols-2 gap-6 mb-8">
                 <div>
                   <h3 className="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-2">{t('quote.customer_details')}</h3>
-                  <p className="font-medium text-on-surface text-lg">{viewingQuote.customer}</p>
+                  <p className="font-medium text-on-surface text-lg">{parseCustomerName(viewingQuote.customer)}</p>
                   <p className="text-sm text-on-surface-variant mt-1">{t('quote.ref_job')} {viewingQuote.jobTitle || viewingQuote.job}</p>
                 </div>
                 <div className="text-right">
@@ -962,7 +975,7 @@ const Quotations: React.FC = () => {
                   </div>
                   {viewingQuote.details?.discountAmount > 0 && (
                     <div className="flex justify-between text-sm text-emerald-600">
-                      <span>Discount ({viewingQuote.details.discountType === 'percent' ? `${viewingQuote.details.discountValue}%` : 'Fixed'})</span>
+                      <span>{t('table.discount')} ({viewingQuote.details.discountType === 'percent' ? `${viewingQuote.details.discountValue}%` : 'Fixed'})</span>
                       <span>-{formatCurrency(viewingQuote.details.discountAmount)}</span>
                     </div>
                   )}
@@ -1014,7 +1027,7 @@ const Quotations: React.FC = () => {
           <div className="bg-surface-container-lowest rounded-2xl w-full max-w-md editorial-shadow overflow-hidden">
             <div className="p-6 border-b ghost-border">
               <h2 className="text-xl font-headline font-semibold text-on-surface">
-                Change Status to {statusChangeModal.newStatus}
+                {t('action.change_stage')} : {t('status.' + statusChangeModal.newStatus.toLowerCase().replace(/ /g, '_')) || statusChangeModal.newStatus}
               </h2>
             </div>
             <div className="p-6 space-y-4">
@@ -1050,16 +1063,16 @@ const Quotations: React.FC = () => {
               ) : statusChangeModal.newStatus === 'Pending Approval' ? (
                 <div>
                   <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                    Note for Approval (Optional)
+                    {t('approval.note_optional')}
                   </label>
                   <textarea
                     value={statusReason}
                     onChange={(e) => setStatusReason(e.target.value)}
                     className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none text-base sm:text-sm min-h-[100px]"
-                    placeholder="Enter any notes for the manager..."
+                    placeholder={t('approval.enter_notes')}
                   />
                   <p className="text-xs text-on-surface-variant mt-2 text-orange-600">
-                    Once submitted for approval, the quotation details cannot be edited until reviewed by a manager.
+                    {t('approval.cannot_edit_warning')}
                   </p>
                 </div>
               ) : (
@@ -1088,7 +1101,7 @@ const Quotations: React.FC = () => {
                   }
                   className="px-6 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white hover:from-[#7c3aed] hover:to-[#c026d3] rounded-full font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
                 >
-                  Confirm Submission
+                  {t('action.confirm_submission')}
                 </button>
               </div>
             </div>
@@ -1102,7 +1115,7 @@ const Quotations: React.FC = () => {
           <div className="bg-surface-container-lowest rounded-2xl w-full max-w-2xl editorial-shadow overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between p-6 border-b ghost-border flex-shrink-0">
               <h2 className="text-xl font-headline font-semibold text-on-surface">
-                {editingQuoteId ? 'Edit Quotation' : 'Create Quotation'}
+                {editingQuoteId ? t('quotation.edit_quotation') : t('action.create_quotation')}
               </h2>
               <button onClick={() => setIsCreateModalOpen(false)} className="text-outline hover:text-on-surface">
                 <X size={24} />
@@ -1255,7 +1268,7 @@ const Quotations: React.FC = () => {
                 <div className="flex items-center justify-between mb-3">
                   <label className="block text-sm font-medium text-on-surface-variant">{t('quotation.line_items_active')}</label>
                   <button type="button" onClick={handleAddItem} className="text-xs text-primary font-medium flex items-center gap-1 hover:underline">
-                    <Plus size={14} /> Add Item
+                    <Plus size={14} /> {t('quotation.add_item')}
                   </button>
                 </div>
                 
@@ -1269,14 +1282,14 @@ const Quotations: React.FC = () => {
                           className="w-full px-3 py-3 bg-surface-container border ghost-border rounded-lg text-base sm:text-sm outline-none mb-3"
                           required
                         >
-                          <option value="">-- Select Product/Service --</option>
+                          <option value="">{t('quotation.select_product')}</option>
                           {products.filter(p => p.status === 'Active' || p.id === item.itemId).map(p => (
                             <option key={p.id} value={p.id}>{p.name} - {formatCurrency(p.currentPrice)}</option>
                           ))}
                         </select>
                         <div className="flex flex-wrap items-center gap-3">
                           <div className="w-20">
-                            <label className="text-[10px] text-on-surface-variant uppercase tracking-wider block mb-1">Qty</label>
+                            <label className="text-[10px] text-on-surface-variant uppercase tracking-wider block mb-1">{t('table.qty')}</label>
                             <input 
                               type="number" min="1" 
                               value={item.quantity}
@@ -1291,7 +1304,7 @@ const Quotations: React.FC = () => {
                             </div>
                           </div>
                           <div className="flex-1 min-w-[100px]">
-                            <label className="text-[10px] text-on-surface-variant uppercase tracking-wider block mb-1">Discount (฿)</label>
+                            <label className="text-[10px] text-on-surface-variant uppercase tracking-wider block mb-1">{t('table.discount')} (฿)</label>
                             <input 
                               type="number" min="0" 
                               value={item.discount || ''}
@@ -1347,7 +1360,7 @@ const Quotations: React.FC = () => {
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex items-center justify-between text-sm text-emerald-600">
-                    <span>Discount Amount</span>
+                    <span>{t('quotation.discount_amount')}</span>
                     <span>-{formatCurrency(discountAmount)}</span>
                   </div>
                 )}
@@ -1369,7 +1382,7 @@ const Quotations: React.FC = () => {
                   disabled={!selectedCustomer || lineItems.length === 0}
                   className="px-6 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white hover:from-[#7c3aed] hover:to-[#c026d3] rounded-full font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingQuoteId ? 'Save Changes' : 'Create Quotation'}
+                  {editingQuoteId ? t('action.save_changes') : t('action.create_quotation')}
                 </button>
               </div>
             </form>
