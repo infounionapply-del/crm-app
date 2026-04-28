@@ -147,7 +147,7 @@ const Settings: React.FC = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm(t('user.confirm_delete'))) {
       notify.promise(deleteUser(id), {
         loading: 'Deleting user...',
         success: 'User deleted successfully.',
@@ -221,7 +221,7 @@ const Settings: React.FC = () => {
                       </span>
                       {u.team && (
                         <span className="inline-flex px-2 py-0.5 rounded-md bg-surface-container text-[10px] uppercase font-bold text-on-surface-variant border ghost-border">
-                          Team {u.team}
+                          {t('user.team_label')} {u.team}
                         </span>
                       )}
                     </div>
@@ -243,21 +243,22 @@ const Settings: React.FC = () => {
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-scrim/50 backdrop-blur-sm animate-in fade-in duration-200">
                 <div className="bg-surface-container-lowest rounded-2xl w-full max-w-md editorial-shadow border ghost-border overflow-hidden">
                   <div className="p-4 border-b ghost-border flex items-center justify-between">
-                    <h3 className="font-headline font-semibold text-lg text-on-surface">{editingUserId === 'new' ? 'New User' : 'Edit User'}</h3>
+                    <h3 className="font-headline font-semibold text-lg text-on-surface">{editingUserId === 'new' ? t('user.new_user') : t('user.edit_user')}</h3>
                     <button onClick={() => setEditingUserId(null)} className="p-1 text-on-surface-variant hover:bg-surface-container rounded-lg"><X size={20} /></button>
                   </div>
                   <div className="p-4 space-y-4">
                     <div><label className="block text-sm mb-1">{t('table.name')}</label><input type="text" value={editingUser.name} onChange={e => setEditingUser({ ...editingUser, name: e.target.value })} className="w-full px-3 py-2 border ghost-border rounded-lg" /></div>
                     <div><label className="block text-sm mb-1">{t('table.email')}</label><input type="email" value={editingUser.email} onChange={e => setEditingUser({ ...editingUser, email: e.target.value })} className="w-full px-3 py-2 border ghost-border rounded-lg" /></div>
-                    <div><label className="block text-sm mb-1">Password {editingUserId !== 'new' && <span className="text-on-surface-variant text-xs font-normal">(Leave blank to keep unchanged)</span>}</label><input type="password" value={editingUser.password || ''} placeholder={editingUserId !== 'new' ? '••••••••' : 'Enter password'} onChange={e => setEditingUser({ ...editingUser, password: e.target.value })} className="w-full px-3 py-2 border ghost-border rounded-lg" /></div>
+                    <div><label className="block text-sm mb-1">{t('user.password')} {editingUserId !== 'new' && <span className="text-on-surface-variant text-xs font-normal">{t('user.password_keep_blank')}</span>}</label><input type="password" value={editingUser.password || ''} placeholder={editingUserId !== 'new' ? '••••••••' : t('user.enter_password')} onChange={e => setEditingUser({ ...editingUser, password: e.target.value })} className="w-full px-3 py-2 border ghost-border rounded-lg" /></div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm mb-1">{t('table.role')}</label>
                         <select value={editingUser.role} onChange={e => setEditingUser({ ...editingUser, role: e.target.value })} className="w-full px-3 py-2 border ghost-border rounded-lg">
-                          <option value="Administrator">Administrator</option>
-                          <option value="Manager">Manager</option>
-                          <option value="Sales">Sales</option>
-                          <option value="Support">Support</option>
+                          <option value="Administrator">{t('user.role_administrator')}</option>
+                          <option value="Manager">{t('user.role_manager')}</option>
+                          <option value="Sales">{t('user.role_sales')}</option>
+                          <option value="Lead">{t('user.role_lead')}</option>
+                          <option value="Support">{t('user.role_support')}</option>
                         </select>
                       </div>
                       <div>
@@ -267,8 +268,8 @@ const Settings: React.FC = () => {
                     </div>
                   </div>
                   <div className="p-4 border-t ghost-border flex justify-end gap-3">
-                    <button onClick={() => setEditingUserId(null)} className="px-4 py-2 text-sm font-medium hover:bg-surface-container rounded-lg">Cancel</button>
-                    <button onClick={handleSaveUser} className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white rounded-lg shadow-sm hover:from-[#7c3aed] hover:to-[#c026d3]">Save</button>
+                    <button onClick={() => setEditingUserId(null)} className="px-4 py-2 text-sm font-medium hover:bg-surface-container rounded-lg">{t('common.cancel')}</button>
+                    <button onClick={handleSaveUser} className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white rounded-lg shadow-sm hover:from-[#7c3aed] hover:to-[#c026d3]">{t('common.save')}</button>
                   </div>
                 </div>
               </div>

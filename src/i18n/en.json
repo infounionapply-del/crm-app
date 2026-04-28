@@ -449,5 +449,19 @@
   "quotation.enter_reason": "Enter reason for",
   "quotation.no_history": "No history available.",
   "quotation.pending_qt": "Pending QT No.",
-  "approval.no_items_tab": "There are no {tab} approvals matching your criteria."
+  "approval.no_items_tab": "There are no {tab} approvals matching your criteria.",
+  "user.new_user": "New User",
+  "user.edit_user": "Edit User",
+  "user.password": "Password",
+  "user.password_keep_blank": "(Leave blank to keep unchanged)",
+  "user.enter_password": "Enter password",
+  "user.role_administrator": "Administrator",
+  "user.role_manager": "Manager",
+  "user.role_sales": "Sales",
+  "user.role_support": "Support",
+  "user.role_lead": "Lead",
+  "user.status_active": "Active",
+  "user.status_inactive": "Inactive",
+  "user.confirm_delete": "Are you sure you want to delete this user?",
+  "user.team_label": "Team"
 }

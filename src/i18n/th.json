@@ -117,7 +117,7 @@
   "customer.gps": "GPS",
   "common.cancel": "ยกเลิก",
   "common.save": "บันทึก",
-  "common.submit": "ส่งข้อมูล",
+  "common.submit": "ส่ง",
   "customer.company_name": "ชื่อบริษัท",
   "customer.type_bu": "ประเภทธุรกิจ",
   "customer.group_bu": "กลุ่ม/BU",
@@ -277,7 +277,7 @@
   "job.revision_history": "ประวัติการแก้ไข",
   "job.stage_history": "ประวัติการเปลี่ยนสถานะ",
   "table.created_date": "วันที่สร้าง",
-  "common.auto_synced": "ซิงค์อัตโนมัติจากโอกาสงานขาย",
+  "common.auto_synced": "ซิงค์อัตโนมัติจากงาน",
   "status": {
     "open": "เปิด",
     "assigned": "มอบหมายแล้ว",
@@ -449,5 +449,19 @@
   "quotation.enter_reason": "ระบุเหตุผลสำหรับ",
   "quotation.no_history": "ไม่มีประวัติ",
   "quotation.pending_qt": "รอเลขที่ใบเสนอราคา",
-  "approval.no_items_tab": "ไม่มีรายการ{tab}ที่ตรงกับเงื่อนไขของคุณ"
+  "approval.no_items_tab": "ไม่มีรายการ{tab}ที่ตรงกับเงื่อนไขของคุณ",
+  "user.new_user": "เพิ่มผู้ใช้งานใหม่",
+  "user.edit_user": "แก้ไขผู้ใช้งาน",
+  "user.password": "รหัสผ่าน",
+  "user.password_keep_blank": "(เว้นว่างไว้หากไม่ต้องการเปลี่ยน)",
+  "user.enter_password": "กรอกรหัสผ่าน",
+  "user.role_administrator": "ผู้ดูแลระบบ",
+  "user.role_manager": "ผู้จัดการ",
+  "user.role_sales": "ฝ่ายขาย",
+  "user.role_support": "ฝ่ายสนับสนุน",
+  "user.role_lead": "หัวหน้าทีม",
+  "user.status_active": "ใช้งาน",
+  "user.status_inactive": "ไม่ใช้งาน",
+  "user.confirm_delete": "คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้งานนี้?",
+  "user.team_label": "ทีม"
 }
