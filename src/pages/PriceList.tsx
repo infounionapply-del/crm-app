@@ -209,10 +209,10 @@ const PriceList: React.FC = () => {
             className="pl-10 pr-8 py-2.5 bg-surface-container-lowest border ghost-border rounded-xl text-sm font-medium text-on-surface outline-none focus:ring-2 focus:ring-primary appearance-none"
           >
             <option value="All">{t('price_list.all_statuses')}</option>
-            <option value="Active">Active</option>
-            <option value="Pending Approval">Pending Approval</option>
-            <option value="Draft">Draft</option>
-            <option value="Expired">Expired</option>
+            <option value="Active">{t('status.active')}</option>
+            <option value="Pending Approval">{t('status.pending_approval')}</option>
+            <option value="Draft">{t('status.draft')}</option>
+            <option value="Expired">{t('status.expired')}</option>
           </select>
         </div>
       </div>
@@ -254,10 +254,10 @@ const PriceList: React.FC = () => {
                       onChange={(e) => handleStatusChange(item.id, e.target.value)}
                       className={`text-xs font-medium px-2.5 py-1 rounded-full border outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer ${getStatusColor(item.status)}`}
                     >
-                      <option value="Active">Active</option>
-                      <option value="Pending Approval">Pending Approval</option>
-                      <option value="Draft">Draft</option>
-                      <option value="Expired">Expired</option>
+                      <option value="Active">{t('status.active')}</option>
+                      <option value="Pending Approval">{t('status.pending_approval')}</option>
+                      <option value="Draft">{t('status.draft')}</option>
+                      <option value="Expired">{t('status.expired')}</option>
                     </select>
                   </td>
                   <td className="px-6 py-4 text-sm text-on-surface-variant">{item.effectiveDate}</td>
@@ -294,7 +294,7 @@ const PriceList: React.FC = () => {
               {filteredItems.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
-                    No items found matching your criteria.
+                    {t('price.no_items')}
                   </td>
                 </tr>
               )}
@@ -330,10 +330,10 @@ const PriceList: React.FC = () => {
                   onChange={(e) => handleStatusChange(item.id, e.target.value)}
                   className={`text-xs font-medium px-2.5 py-1 rounded-full border outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer ${getStatusColor(item.status)}`}
                 >
-                  <option value="Active">Active</option>
-                  <option value="Pending Approval">Pending Approval</option>
-                  <option value="Draft">Draft</option>
-                  <option value="Expired">Expired</option>
+                  <option value="Active">{t('status.active')}</option>
+                  <option value="Pending Approval">{t('status.pending_approval')}</option>
+                  <option value="Draft">{t('status.draft')}</option>
+                  <option value="Expired">{t('status.expired')}</option>
                 </select>
 
                 <div className="flex items-center gap-1">
@@ -365,7 +365,7 @@ const PriceList: React.FC = () => {
           ))}
           {filteredItems.length === 0 && (
             <div className="text-center py-8 text-on-surface-variant text-sm">
-              No items found matching your criteria.
+              {t('price.no_items')}
             </div>
           )}
         </div>
@@ -377,7 +377,7 @@ const PriceList: React.FC = () => {
           <div className="bg-surface-container-lowest rounded-2xl w-full max-w-md editorial-shadow overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b ghost-border">
               <h2 className="text-xl font-headline font-semibold text-on-surface">
-                {editingItem.id ? 'Edit Item' : 'Add New Item'}
+                {editingItem.id ? t('price.edit_item') : t('price.add_new_item')}
               </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-outline hover:text-on-surface">
                 <XCircle size={24} />
@@ -395,7 +395,7 @@ const PriceList: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-on-surface mb-1">Name</label>
+                <label className="block text-sm font-medium text-on-surface mb-1">{t('price.name')}</label>
                 <input 
                   type="text" 
                   value={editingItem.name}
@@ -416,7 +416,7 @@ const PriceList: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-on-surface mb-1">Price (THB)</label>
+                  <label className="block text-sm font-medium text-on-surface mb-1">{t('price.price_thb')}</label>
                   <input 
                     type="number" 
                     value={editingItem.currentPrice}
@@ -428,7 +428,7 @@ const PriceList: React.FC = () => {
               {editingItem.id && (
                 <div className="p-3 bg-orange-50 text-orange-800 rounded-xl text-xs flex items-start gap-2">
                   <Clock size={16} className="mt-0.5 flex-shrink-0" />
-                  <p>Changing the price will create a new version requiring approval before it becomes active.</p>
+                  <p>{t('price.price_change_warning')}</p>
                 </div>
               )}
             </div>
@@ -437,13 +437,13 @@ const PriceList: React.FC = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container rounded-xl transition-colors"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button 
                 onClick={handleSaveItem}
                 className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white rounded-xl hover:from-[#7c3aed] hover:to-[#c026d3] transition-colors shadow-sm"
               >
-                Save Item
+                {t('price.save_item')}
               </button>
             </div>
           </div>
@@ -457,7 +457,7 @@ const PriceList: React.FC = () => {
             <div className="flex items-center justify-between p-6 border-b ghost-border flex-shrink-0">
               <h2 className="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
                 <Clock size={24} className="text-primary" />
-                Price History: {viewingHistory.name}
+                {t('price.price_history')} {viewingHistory.name}
               </h2>
               <button onClick={() => setViewingHistory(null)} className="text-outline hover:text-on-surface">
                 <XCircle size={24} />
@@ -479,7 +479,7 @@ const PriceList: React.FC = () => {
                       </div>
                       <div className="text-xs text-on-surface-variant flex items-center justify-between">
                         <span>{record.date}</span>
-                        {record.approvedBy && <span>By: {record.approvedBy}</span>}
+                        {record.approvedBy && <span>{t('price.by')} {record.approvedBy}</span>}
                       </div>
                     </div>
                   </div>

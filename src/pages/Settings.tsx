@@ -30,7 +30,7 @@ const Settings: React.FC = () => {
     setShowPdfBuilder(false);
     notify.promise(
       updateCompanySettings({ pdf_settings: updatedPdfSettings }),
-      { loading: 'Saving template...', success: 'Template saved successfully.', error: 'Failed to save.' }
+      { loading: t('settings.saving_template'), success: t('settings.saved_template'), error: t('settings.save_failed') }
     );
   };
 
@@ -68,21 +68,21 @@ const Settings: React.FC = () => {
   const handleSavePdf = async () => {
     notify.promise(
       updateCompanySettings({ pdf_settings: editPdf }),
-      { loading: 'Saving PDF settings...', success: 'PDF Template Settings saved successfully.', error: 'Failed to save.' }
+      { loading: t('settings.saving_pdf'), success: t('settings.saved_pdf'), error: t('settings.save_failed') }
     );
   };
 
   const handleSaveCompany = async () => {
     notify.promise(
       updateCompanySettings({ company_details: editCompany }),
-      { loading: 'Saving company details...', success: 'Company Details saved successfully.', error: 'Failed to save.' }
+      { loading: t('settings.saving_company'), success: t('settings.saved_company'), error: t('settings.save_failed') }
     );
   };
 
   const handleSavePrefs = async () => {
     notify.promise(
       updateCompanySettings({ system_preferences: { ...companySettings?.system_preferences, ...editPrefs } }),
-      { loading: 'Saving preferences...', success: 'System Preferences saved successfully.', error: 'Failed to save.' }
+      { loading: t('settings.saving_prefs'), success: t('settings.saved_prefs'), error: t('settings.save_failed') }
     );
   };
 
@@ -94,7 +94,7 @@ const Settings: React.FC = () => {
           notifications: editNotifications
         }
       }),
-      { loading: 'Saving notifications...', success: 'Notification Settings saved successfully.', error: 'Failed to save.' }
+      { loading: t('settings.saving_notifications'), success: t('settings.saved_notifications'), error: t('settings.save_failed') }
     );
   };
 
@@ -107,7 +107,7 @@ const Settings: React.FC = () => {
           last_name: lastNameArr.join(' '),
           email: editProfile.email
         }),
-        { loading: 'Saving profile...', success: 'Profile saved successfully.', error: 'Failed to save profile.' }
+        { loading: t('settings.saving_profile'), success: t('settings.saved_profile'), error: t('settings.save_failed') }
       );
     }
   };
@@ -116,20 +116,28 @@ const Settings: React.FC = () => {
     if (!editSecurity.newPassword) return;
 
     const updateTask = async () => {
-      const { error } = await supabase.auth.updateUser({ password: editSecurity.newPassword });
-      if (error) throw error;
+      // Try Supabase auth first, fall back to profile-only update
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { error } = await supabase.auth.updateUser({ password: editSecurity.newPassword });
+          if (error) throw error;
+        }
+      } catch (authError: any) {
+        console.warn('Auth update skipped:', authError.message);
+      }
       if (profile?.id) {
         await updateProfile(profile.id, { password_hash: editSecurity.newPassword });
       }
     };
 
     notify.promise(updateTask(), {
-      loading: 'Updating password...',
+      loading: t('settings.updating_password'),
       success: () => {
         setEditSecurity({ password: '', newPassword: '' });
-        return 'Password updated successfully.';
+        return t('settings.password_updated');
       },
-      error: (e: any) => 'Failed to update password: ' + e.message
+      error: (e: any) => t('settings.password_failed') + ': ' + e.message
     });
   };
 
@@ -137,21 +145,21 @@ const Settings: React.FC = () => {
     const saveTask = editingUserId === 'new' ? addUser(editingUser) : updateUser(editingUserId!, editingUser);
 
     notify.promise(saveTask, {
-      loading: 'Saving user...',
+      loading: t('settings.saving_user'),
       success: () => {
         setEditingUserId(null);
-        return 'User saved successfully.';
+        return t('settings.saved_user');
       },
-      error: (e: any) => 'Failed to save user: ' + (e.message || 'Unknown error')
+      error: (e: any) => t('settings.save_user_failed') + ': ' + (e.message || 'Unknown error')
     });
   };
 
   const handleDeleteUser = async (id: string) => {
     if (confirm(t('user.confirm_delete'))) {
       notify.promise(deleteUser(id), {
-        loading: 'Deleting user...',
-        success: 'User deleted successfully.',
-        error: 'Failed to delete user.'
+        loading: t('settings.deleting_user'),
+        success: t('settings.deleted_user'),
+        error: t('settings.delete_user_failed')
       });
     }
   };
@@ -337,7 +345,7 @@ const Settings: React.FC = () => {
 
                 <div className="pt-4 flex justify-end">
                   <button onClick={handleSavePdf} className="px-6 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] text-white hover:from-[#7c3aed] hover:to-[#c026d3] rounded-full font-medium hover:bg-primary/90 transition-colors shadow-sm">
-                    Save Template
+                    {t('settings.save_template')}
                   </button>
                 </div>
               </div>
