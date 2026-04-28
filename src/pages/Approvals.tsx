@@ -195,14 +195,14 @@ const Approvals: React.FC = () => {
                     {!isManagerOrAdmin && (
                       <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(approval.status)}`}>
                         <span className={`w-2 h-2 rounded-full mr-2 ${getStatusDot(approval.status)}`}></span>
-                        {approval.status}
+                        {t('status.' + approval.status.toLowerCase()) || approval.status}
                       </span>
                     )}
                   </>
                 ) : (
                   <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(approval.status)}`}>
                     <span className={`w-2 h-2 rounded-full mr-2 ${getStatusDot(approval.status)}`}></span>
-                    {approval.status}
+                    {t('status.' + approval.status.toLowerCase()) || approval.status}
                   </span>
                 )}
                 <button className="p-2 text-outline hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" title={t('action.add_comment')}>
@@ -220,7 +220,7 @@ const Approvals: React.FC = () => {
               <CheckCircle size={32} />
             </div>
             <h3 className="text-lg font-medium text-on-surface mb-1">{t('approval.all_caught_up')}</h3>
-            <p className="text-on-surface-variant">There are no {activeTab.toLowerCase()} approvals matching your criteria.</p>
+            <p className="text-on-surface-variant">{t('approval.no_items_tab').replace('{tab}', t('status.' + activeTab.toLowerCase()) || activeTab.toLowerCase())}</p>
           </div>
         )}
       </div>

@@ -610,7 +610,7 @@ const Quotations: React.FC = () => {
                           <div className="w-10 h-10 rounded-xl bg-tertiary-container/30 text-tertiary flex items-center justify-center flex-shrink-0">
                             <FileText size={20} />
                           </div>
-                          <div className="font-medium text-on-surface">{quote.quotation_number || 'Pending QT No.'}</div>
+                          <div className="font-medium text-on-surface">{quote.quotation_number || t('quotation.pending_qt')}</div>
                         </div>
                       </td>
                   <td className="px-6 py-4">
@@ -638,7 +638,7 @@ const Quotations: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-on-surface">{quote.date}</div>
-                    <div className="text-xs text-on-surface-variant mt-0.5">Valid until: {quote.validUntil}</div>
+                    <div className="text-xs text-on-surface-variant mt-0.5">{t('quotation.valid_until')} {quote.validUntil}</div>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(quote.status)}`}>
@@ -1012,7 +1012,7 @@ const Quotations: React.FC = () => {
                     </div>
                   ))}
                   {(!viewingQuote.history || viewingQuote.history.length === 0) && (
-                    <p className="text-sm text-on-surface-variant">No history available.</p>
+                    <p className="text-sm text-on-surface-variant">{t('quotation.no_history')}</p>
                   )}
                 </div>
               </div>
@@ -1035,19 +1035,19 @@ const Quotations: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                      Sales Order (SO) Number <span className="text-error">*</span>
+                      {t('quotation.so_number')} <span className="text-error">*</span>
                     </label>
                     <input
                       type="text"
                       value={soNumberInput}
                       onChange={(e) => setSoNumberInput(e.target.value)}
                       className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none text-base sm:text-sm"
-                      placeholder="Enter SO Number (e.g. SO-12345)"
+                      placeholder={t('quotation.enter_so')}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                      Estimated Completion Date <span className="text-error">*</span>
+                      {t('quotation.estimated_date')} <span className="text-error">*</span>
                     </label>
                     <input
                       type="date"
@@ -1056,7 +1056,7 @@ const Quotations: React.FC = () => {
                       className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none text-base sm:text-sm"
                     />
                     <p className="text-xs text-on-surface-variant mt-1.5">
-                      This date will be visible to the Sales team to track fulfillment progress.
+                      {t('quotation.estimated_date_desc')}
                     </p>
                   </div>
                 </div>
@@ -1078,7 +1078,7 @@ const Quotations: React.FC = () => {
               ) : (
                 <div>
                   <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                    Reason / Note {statusChangeModal.newStatus !== 'Approved' && <span className="text-error">*</span>}
+                    {t('quotation.reason_note')} {statusChangeModal.newStatus !== 'Approved' && <span className="text-error">*</span>}
                   </label>
                   <textarea
                     value={statusReason}
@@ -1124,9 +1124,9 @@ const Quotations: React.FC = () => {
             
             {editingQuoteId && quotations.find(q => q.id === editingQuoteId)?.status === 'Revision Requested' && (
               <div className="mx-6 mt-6 mb-2 p-4 bg-purple-50 text-purple-700 rounded-xl border border-purple-100 flex flex-col gap-1 shadow-sm">
-                <span className="font-semibold text-sm flex items-center gap-2"><FileText size={16}/> Revision Note from Sales:</span>
+                <span className="font-semibold text-sm flex items-center gap-2"><FileText size={16}/> {t('quotation.revision_note')}</span>
                 <span className="text-sm">
-                  {quotations.find(q => q.id === editingQuoteId)?.history?.[0]?.note || 'No note provided.'}
+                  {quotations.find(q => q.id === editingQuoteId)?.history?.[0]?.note || t('quotation.no_note')}
                 </span>
               </div>
             )}
@@ -1136,7 +1136,7 @@ const Quotations: React.FC = () => {
                 {/* Customer Selection (CRITICAL) */}
                 <div>
                   <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                    Select Customer <span className="text-error">*</span>
+                    {t('quotation.select_customer')} <span className="text-error">*</span>
                   </label>
                   
                   {selectedCustomer ? (
@@ -1167,7 +1167,7 @@ const Quotations: React.FC = () => {
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-outline" size={18} />
                       <input 
                         type="text" 
-                        placeholder="Search and select customer..."
+                        placeholder={t('quotation.search_customer')}
                         value={customerSearch}
                         onChange={(e) => {
                           setCustomerSearch(e.target.value);
@@ -1200,7 +1200,7 @@ const Quotations: React.FC = () => {
                             ))
                           ) : (
                             <div className="p-4 text-sm text-on-surface-variant text-center">
-                              No customers found.
+                              {t('quotation.no_customers_found')}
                             </div>
                           )}
                         </div>
@@ -1208,7 +1208,7 @@ const Quotations: React.FC = () => {
                     </div>
                   )}
                   {!selectedCustomer && (
-                    <p className="text-xs text-error mt-1.5">A customer must be selected to create a quotation.</p>
+                    <p className="text-xs text-error mt-1.5">{t('quotation.customer_required')}</p>
                   )}
                 </div>
 
@@ -1222,7 +1222,7 @@ const Quotations: React.FC = () => {
                       disabled={!selectedCustomer || !!editingQuoteId}
                       className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none disabled:opacity-50 text-base sm:text-sm"
                     >
-                      <option value="">-- Select a Job --</option>
+                      <option value="">{t('quotation.select_job')}</option>
                       {selectedCustomer && jobs.filter(j => {
                         if (j.customer !== selectedCustomer.name) return false;
                         if (editingQuoteId && j.id === selectedJob) return true;
