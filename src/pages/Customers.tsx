@@ -305,7 +305,7 @@ const Customers: React.FC = () => {
                               customer.status === 'Inactive' ? 'bg-gray-400' :
                                 'bg-blue-500'}
                       `}></span>
-                          {customer.status}
+                          {t('status.' + customer.status.toLowerCase()) || customer.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -379,7 +379,7 @@ const Customers: React.FC = () => {
                           customer.status === 'Inactive' ? 'bg-gray-400' :
                           'bg-blue-500'}
                       `}></span>
-                      {customer.status}
+                      {t('status.' + customer.status.toLowerCase()) || customer.status}
                     </span>
                     
                     <div className="flex items-center gap-1">
@@ -507,7 +507,7 @@ const Customers: React.FC = () => {
                         viewingCustomer.status === 'Inactive' ? 'bg-gray-400' :
                           'bg-blue-500'}
                     `}></span>
-                    {viewingCustomer.status}
+                    {t('status.' + viewingCustomer.status.toLowerCase()) || viewingCustomer.status}
                   </span>
                 </div>
                 <div>
@@ -673,9 +673,9 @@ const Customers: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-on-surface-variant mb-1">{t('table.status')}</label>
                       <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })} className="w-full px-4 py-3 bg-surface-container border ghost-border rounded-xl focus:ring-2 focus:ring-primary outline-none text-base sm:text-sm">
-                        <option value="Lead">Lead</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
+                        <option value="Lead">{t('status.lead')}</option>
+                        <option value="Active">{t('status.active')}</option>
+                        <option value="Inactive">{t('status.inactive')}</option>
                       </select>
                     </div>
                   </div>
