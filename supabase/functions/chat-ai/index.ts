@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, userId, language = 'th' } = await req.json();
+    const { message, userId, conversationId, language = 'th' } = await req.json();
     console.log(`Received message: "${message}" from user ${userId} in ${language}`);
 
     if (!message || !userId) {

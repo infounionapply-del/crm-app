@@ -51,10 +51,11 @@ const AIAssistantModal: React.FC<AIAssistantModalProps> = ({ onClose }) => {
         content: data.response || t('ai.error_response')
       }]);
     } catch (err: any) {
-      console.error("AI Error:", err);
+      console.error("AI Error Detailed:", err);
+      const errorMessage = err.message || t('ai.connection_error');
       setMessages(prev => [...prev, { 
         role: 'ai', 
-        content: t('ai.connection_error')
+        content: `${t('ai.connection_error')} (${errorMessage})`
       }]);
     } finally {
       setIsTyping(false);
