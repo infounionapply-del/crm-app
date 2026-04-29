@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { MobileBottomNav } from './layout/MobileBottomNav';
 import { InstallPWA } from './InstallPWA';
+import AIAssistantButton from './ai/AIAssistantButton';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
@@ -264,6 +265,9 @@ const Layout: React.FC = () => {
 
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
+
+      {/* AI Assistant Floating Button */}
+      <AIAssistantButton />
 
       {/* PWA Install Prompt */}
       <InstallPWA />

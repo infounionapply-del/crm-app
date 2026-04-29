@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
 import { supabase } from '../lib/supabase';
-import { Globe, Bell, Shield, User as UserIcon, Building, Users, FileText, Check, X, Edit2, Plus, Trash2, LayoutTemplate } from 'lucide-react';
+import { Globe, Bell, Shield, User as UserIcon, Building, Users, FileText, Check, X, Edit2, Plus, Trash2, LayoutTemplate, Bot } from 'lucide-react';
 import { PdfBuilder, PdfTemplateLayout } from '../components/pdf-builder';
 
 const Settings: React.FC = () => {
@@ -566,7 +567,7 @@ const Settings: React.FC = () => {
             <span>{t('settings.profile')}</span>
           </button>
 
-          {['Administrator', 'Manager', 'Admin', 'Super Admin'].includes(profile?.role) && (
+          {['Administrator', 'Manager', 'Admin', 'Super Admin', 'admin', 'manager', 'administrator', 'super admin'].includes(profile?.role) && (
             <>
               <button onClick={() => setActiveTab('users')} className={getTabClass('users')}>
                 <Users size={20} className={getIconClass('users')} />
@@ -584,6 +585,10 @@ const Settings: React.FC = () => {
                 <Bell size={20} className={getIconClass('notifications')} />
                 <span>{t('settings.notifications')}</span>
               </button>
+              <Link to="/settings/ai" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-left text-on-surface-variant hover:bg-surface-container hover:text-on-surface">
+                <Bot size={20} className="text-outline" />
+                <span>AI Settings</span>
+              </Link>
             </>
           )}
 

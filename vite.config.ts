@@ -98,7 +98,7 @@ export default defineConfig(({mode}) => {
       host: '0.0.0.0',
       port: 3005,
       strictPort: true,
-      allowedHosts: 'all',
+      allowedHosts: true,
     },
   };
 });

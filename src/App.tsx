@@ -17,9 +17,11 @@ import Quotations from './pages/Quotations';
 import PriceList from './pages/PriceList';
 import Approvals from './pages/Approvals';
 import Settings from './pages/Settings';
+import SettingsAI from './pages/SettingsAI';
 import Targets from './pages/Targets';
 import Login from './pages/Login';
 import CheckIns from './pages/CheckIns';
+import Chat from './pages/Chat';
 
 import Reports from './pages/Reports';
 
@@ -58,8 +60,10 @@ export default function App() {
                 <Route path="price-list" element={<PriceList />} />
                 <Route path="approvals" element={<Approvals />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="settings/ai" element={<SettingsAI />} />
                 <Route path="targets" element={<Targets />} />
                 <Route path="check-ins" element={<CheckIns />} />
+                <Route path="chat" element={<Chat />} />
                 <Route path="reports" element={<Reports />} />
               </Route>
             </Routes>
