@@ -64,7 +64,7 @@ const Approvals: React.FC = () => {
         {
           loading: t('action.approve_processing'),
           success: 'Approved successfully',
-          error: 'Failed to approve'
+          error: (err: any) => `Failed to approve: ${err.message || err}`
         }
       );
       setViewingApproval(null);
@@ -86,7 +86,7 @@ const Approvals: React.FC = () => {
         {
           loading: t('action.rejecting'),
           success: 'Rejected successfully',
-          error: 'Failed to reject'
+          error: (err: any) => `Failed to reject: ${err.message || err}`
         }
       );
       setRejectModal(null);

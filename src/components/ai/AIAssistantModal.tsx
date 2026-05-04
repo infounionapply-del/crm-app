@@ -44,8 +44,23 @@ const AIAssistantModal: React.FC<AIAssistantModalProps> = ({ onClose }) => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Try to read the response body for detailed error
+        let detail = error.message || 'Unknown error';
+        if (error.context && typeof error.context.json === 'function') {
+          try {
+            const body = await error.context.json();
+            detail = body?.error || body?.message || detail;
+          } catch (_) {}
+        }
+        console.error("AI Function Error:", detail);
+        throw new Error(detail);
+      }
       
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
       setMessages(prev => [...prev, { 
         role: 'ai', 
         content: data.response || t('ai.error_response')
@@ -55,7 +70,7 @@ const AIAssistantModal: React.FC<AIAssistantModalProps> = ({ onClose }) => {
       const errorMessage = err.message || t('ai.connection_error');
       setMessages(prev => [...prev, { 
         role: 'ai', 
-        content: `${t('ai.connection_error')} (${errorMessage})`
+        content: `⚠️ ${errorMessage}`
       }]);
     } finally {
       setIsTyping(false);

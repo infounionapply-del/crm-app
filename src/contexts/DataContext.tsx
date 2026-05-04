@@ -692,6 +692,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (quotationData.revisionCount !== undefined) updatePayload.revision_count = quotationData.revisionCount;
       if (quotationData.quotationPdfLink !== undefined) updatePayload.quotation_pdf_url = quotationData.quotationPdfLink;
       if (quotationData.poPdfLink !== undefined) updatePayload.po_pdf_url = quotationData.poPdfLink;
+      if (quotationData.approved_by !== undefined) updatePayload.approved_by = quotationData.approved_by;
 
       if (quotationData.quotationPdfBlob && quotationData.quotationPdfFilename) {
         const fileExt = quotationData.quotationPdfFilename.split('.').pop() || 'pdf';
@@ -905,7 +906,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.from('approvals').update({ 
         status,
-        approved_by: session?.user?.id 
+        approved_by: session?.user?.id,
+        comments: reason || null
       }).eq('id', id);
       if (error) throw error;
       
@@ -925,7 +927,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               note: reason || `Quotation was ${status.toLowerCase()} via Approvals.`
             }, ...(quote.history || [])];
 
-            await updateQuotation(quote.id, { status: status, history: newHistory });
+            await updateQuotation(quote.id, { 
+              status: status, 
+              history: newHistory,
+              approved_by: session?.user?.id
+            });
           }
         }
       }
